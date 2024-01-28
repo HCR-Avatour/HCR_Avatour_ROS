@@ -1,4 +1,4 @@
-# Imperial College - EEE - Human Centered Robotics 2022
+# Imperial College - EEE - Human Centered Robotics 2024
 
 This repository is intended for Imperial College students taking the Human Centered Robotics class with Pr. Demiris.
 You will find here everything you need to start working with the robots.
