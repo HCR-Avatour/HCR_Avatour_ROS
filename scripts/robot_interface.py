@@ -91,7 +91,8 @@ class robot_interface:
                 else:
                     linear == False
             
-            return (linear, event.value)
+                return (linear, event.value)
+            return None, None
 
 
     def run(self):
@@ -104,12 +105,13 @@ class robot_interface:
                 if move:
                     linear, value = self.getKey()
                     
-                    if linear:
-                        self.cmd_vel.linear.x = value
-                        self.cmd_vel.angular.z = 0
-                    else:
-                        self.cmd_vel.linear.x = 0
-                        self.cmd_vel.angular.z = value
+                    if linear is not None and value is not None:
+                        if linear:
+                            self.cmd_vel.linear.x = value
+                            self.cmd_vel.angular.z = 0
+                        else:
+                            self.cmd_vel.linear.x = 0
+                            self.cmd_vel.angular.z = value
                    
                     
                     self.robot_pub.publish(self.cmd_vel)
