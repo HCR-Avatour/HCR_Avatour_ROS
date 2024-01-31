@@ -47,12 +47,19 @@ class robot_interface:
         self.sub_VR_joy = rospy.Subscriber(topic_name, Joy, self.call_back_VR_joy, queue_size=1)
         rospy.loginfo("Robot joystick mode selected ")
         
-        ## subscribe to a different (computer) topic
-        back_sensor_topic_name = "/sensors/back_laser_scan"
-        back_sensor_type = LaserScan
-        self.sensor_sub = rospy.Subscriber(back_sensor_topic_name, back_sensor_type, self.call_back_back_sensor, queue_size=1)
-        self.sensor_scan = []
-        rospy.loginfo("Subscribed to " + str(back_sensor_topic_name))
+        ### publish back to the wheelchair
+        ## ROS publisher to send joystick data
+        self.robot_pub = rospy.Publisher('/RosAria/cmd_vel', Twist, queue_size=10)
+        rospy.loginfo('Final velocity command publisher created')
+        
+        self.cmd_vel = Twist()
+        self.cmd_vel.linear.x = 0
+        self.cmd_vel.linear.y = 0
+        self.cmd_vel.linear.z = 0
+        self.cmd_vel.angular.x = 0
+        self.cmd_vel.angular.y = 0
+        self.cmd_vel.angular.z = 0
+        
 
        
     
@@ -61,12 +68,17 @@ class robot_interface:
     ######################### 
         
     def run(self):
-
+        move = True
         while not rospy.is_shutdown():
             try:
                 '''
                 DO STUFF HERE to process
                 '''
+                if move:
+                    self.cmd_vel.linear.x = 0.1
+                    self.cmd_vel.angular.z = 0.5
+                    self.robot_pub.publish(self.cmd_vel)
+                    move = False
             except KeyboardInterrupt:
                 self.shutdown()
                 rospy.loginfo("Connection Off")

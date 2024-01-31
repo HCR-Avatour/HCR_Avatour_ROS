@@ -30,9 +30,10 @@ RUN cd src && \
 
 RUN source /opt/ros/noetic/setup.bash && \
     DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
-        ros-noetic-tf
+    ros-noetic-tf
 
 RUN source /opt/ros/noetic/setup.bash && catkin init && catkin build
 
 #CMD /bin/bash
-CMD source devel/setup.bash && rosrun rosaria RosAria _port:=${P3AT_USB_PORT} 
+CMD source devel/setup.bash && rosrun rosaria RosAria _port:=${P3AT_USB_PORT} \
+    && "python3 "
