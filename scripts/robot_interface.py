@@ -92,7 +92,7 @@ class robot_interface:
                     linear == False
             
                 return (linear, event.value)
-            return (False, 0)
+        return (False, 0)
 
 
     def run(self):
@@ -102,17 +102,15 @@ class robot_interface:
                 '''
                 DO STUFF HERE to process
                 '''
-                # if move:
-                #     linear, value = self.getKey()
-                #     if linear:
-                #         self.cmd_vel.linear.x = value
-                #         self.cmd_vel.angular.z = 0
-                #     else:
-                #         self.cmd_vel.linear.x = 0
-                #         self.cmd_vel.angular.z = value
-                self.cmd_vel.linear.x = 0.5
-                self.cmd_vel.angular.z = 0.5    
-                    
+                if move:
+                    linear, value = self.getKey()
+                    if linear:
+                        self.cmd_vel.linear.x = value
+                        self.cmd_vel.angular.z = 0
+                    else:
+                        self.cmd_vel.linear.x = 0
+                        self.cmd_vel.angular.z = value
+
                 self.robot_pub.publish(self.cmd_vel)
                 rospy.loginfo("Publishing velocity command")
                 rospy.loginfo(self.cmd_vel)
