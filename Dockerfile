@@ -7,6 +7,10 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-rec
     git \
     ros-noetic-teleop-twist-keyboard
 
+RUN pip install --upgrade pip && pip install --upgrade setuptools
+
+RUN pip install pygame
+
 ####################################################################################################
 ##################################### BUILDING ARIA FROM SOURCE  ###################################
 ####################################################################################################
