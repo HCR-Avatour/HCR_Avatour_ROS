@@ -204,7 +204,11 @@ def getKey(settings, timeout):
             key = ','
         elif key_int == 3:
             key = 'j'
-
+        elif key_int == 10:
+            key = 'q'
+        elif key_int == 11:
+            key = 'z'
+            
     return key
 
 def saveTerminalSettings():
