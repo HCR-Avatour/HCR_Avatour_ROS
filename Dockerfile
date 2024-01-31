@@ -9,7 +9,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-rec
     python3-pip
 
 
-RUN pip3 install pygame
+RUN pip install pygame
 
 ####################################################################################################
 ##################################### BUILDING ARIA FROM SOURCE  ###################################
