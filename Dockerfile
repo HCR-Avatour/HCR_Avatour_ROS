@@ -5,9 +5,11 @@ SHELL ["/bin/bash", "-c"]
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
     python3-catkin-tools \
     git \
-    ros-noetic-teleop-twist-keyboard
+    ros-noetic-teleop-twist-keyboard \
+    python3-pip
 
-RUN pip install pygame
+
+RUN pip3 install pygame
 
 ####################################################################################################
 ##################################### BUILDING ARIA FROM SOURCE  ###################################
