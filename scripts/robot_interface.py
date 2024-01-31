@@ -34,7 +34,22 @@ from tf.transformations import quaternion_from_euler
 from typing import Tuple
 import threading
 from typing import List 
+import pygame
 
+
+pygame.init()
+
+# Initialize the joystick module
+pygame.joystick.init()
+
+# Check for joystick availability
+if pygame.joystick.get_count() == 0:
+    print("No joystick detected.")
+    quit()
+
+# Initialize the first joystick
+joystick = pygame.joystick.Joystick(0)
+joystick.init()
 
 class robot_interface:
 
@@ -66,7 +81,19 @@ class robot_interface:
     #########################
     ##### Methods #######
     ######################### 
-        
+    def getKey():
+        linear = False
+        for event in pygame.event.get():
+            
+            if event.type == pygame.JOYAXISMOTION:
+                if event.axis == 1:
+                    linear == True
+                else:
+                    linear == False
+            
+            return (linear, event.value)
+
+
     def run(self):
         move = True
         while not rospy.is_shutdown():
@@ -75,14 +102,20 @@ class robot_interface:
                 DO STUFF HERE to process
                 '''
                 if move:
-                    self.cmd_vel.linear.x = 0.5
-                    self.cmd_vel.linear.y = 0
-                    self.cmd_vel.linear.z = 0
-                    self.cmd_vel.angular.x = 0
-                    self.cmd_vel.angular.y = 0
-                    self.cmd_vel.angular.z = 0.5
+                    linear, value = self.getKey()
+                    
+                    if linear:
+                        self.cmd_vel.linear.x = value
+                        self.cmd_vel.angular.z = 0
+                    else:
+                        self.cmd_vel.linear.x = 0
+                        self.cmd_vel.angular.z = value
+                   
+                    
                     self.robot_pub.publish(self.cmd_vel)
                     rospy.loginfo("Publishing velocity command")
+                    
+                    
             except KeyboardInterrupt:
                 self.shutdown()
                 rospy.loginfo("Connection Off")
