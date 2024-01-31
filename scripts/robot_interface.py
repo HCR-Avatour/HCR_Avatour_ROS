@@ -49,7 +49,7 @@ class robot_interface:
         
         ### publish back to the wheelchair
         ## ROS publisher to send joystick data
-        self.robot_pub = rospy.Publisher('/RosAria/cmd_vel', Twist, queue_size=10)
+        self.robot_pub = rospy.Publisher('/RosAria/cmd_vel', Twist, queue_size=1)
         rospy.loginfo('Final velocity command publisher created')
         
         self.cmd_vel = Twist()
@@ -75,9 +75,11 @@ class robot_interface:
                 DO STUFF HERE to process
                 '''
                 if move:
-                    self.cmd_vel.twist.header.stamp = rospy.Time.now()
-                    self.cmd_vel.twist.header.frame_id = "base_link"
-                    self.cmd_vel.linear.x = 0.1
+                    self.cmd_vel.linear.x = 0.5
+                    self.cmd_vel.linear.Y = 0
+                    self.cmd_vel.linear.z = 0
+                    self.cmd_vel.angular.x = 0
+                    self.cmd_vel.angular.y = 0
                     self.cmd_vel.angular.z = 0.5
                     self.robot_pub.publish(self.cmd_vel)
                     move = False
