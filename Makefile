@@ -35,4 +35,7 @@ run-keyboard:
 	docker exec p3at_ros_driver bash -c "source /root/ros_ws/devel/setup.bash && rosrun teleop_twist_keyboard teleop_twist_keyboard.py cmd_vel:=/RosAria/cmd_vel"
 
 debug: 
-	docker exec -it p3at_ros_driver bash -c "source /root/ros_ws/devel/setup.bash && bash"
+	docker exec -it p3at_ros_driver bash -c "source /root/ros_ws/devel/setup.bash && bash && cd /root/ros_ws/src/scripts"
+
+echo:
+	docker exec -it p3at_ros_driver bash -c "source /root/ros_ws/devel/setup.bash && bash && rostopic echo /RosAria/cmd_vel"

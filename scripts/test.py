@@ -185,6 +185,7 @@ class PublishThread(threading.Thread):
 
 def getKey(settings, timeout):
     key = 'k'
+    key_int = 4
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
@@ -192,16 +193,16 @@ def getKey(settings, timeout):
         
         elif event.type == pygame.JOYBUTTONDOWN:
             print("Button pressed:", event.button)
-            key = event.button
+            key_int = event.button
 
 
-        if key == 0:
+        if key_int == 0:
             key = 'i'
-        elif key == 1:
+        elif key_int == 1:
             key = 'l'
-        elif key == 2:
+        elif key_int == 2:
             key = ','
-        elif key == 3:
+        elif key_int == 3:
             key = 'j'
 
     return key
