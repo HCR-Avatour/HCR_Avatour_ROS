@@ -4,7 +4,8 @@ SHELL ["/bin/bash", "-c"]
 # Some useful packages
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
     python3-catkin-tools \
-    git
+    git \
+    ros-noetic-teleop-twist-keyboard
 
 ####################################################################################################
 ##################################### BUILDING ARIA FROM SOURCE  ###################################
@@ -17,7 +18,7 @@ RUN git clone https://github.com/moshulu/aria-legacy/ && \
     make && \
     make install 
 
-####################################################################################################
+########################github############################################################################
 ###################################### ROS WORKSPACE & ROSARIA #####################################
 ####################################################################################################
 
@@ -31,7 +32,7 @@ RUN source /opt/ros/noetic/setup.bash && \
     DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
         ros-noetic-tf
 
-RUN source /opt/ros/noetic/setup.bash && catkin build
+RUN source /opt/ros/noetic/setup.bash && catkin init && catkin build
 
 #CMD /bin/bash
 CMD source devel/setup.bash && rosrun rosaria RosAria _port:=${P3AT_USB_PORT} 
