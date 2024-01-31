@@ -33,3 +33,6 @@ run-robot_interface:
 
 run-keyboard:
 	docker exec p3at_ros_driver bash -c "source /root/ros_ws/devel/setup.bash && rosrun teleop_twist_keyboard teleop_twist_keyboard.py cmd_vel:=/RosAria/cmd_vel"
+
+debug: 
+	docker exec -it p3at_ros_driver bash -c "source /root/ros_ws/devel/setup.bash && bash"

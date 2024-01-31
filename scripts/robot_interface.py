@@ -76,7 +76,7 @@ class robot_interface:
                 '''
                 if move:
                     self.cmd_vel.linear.x = 0.5
-                    self.cmd_vel.linear.Y = 0
+                    self.cmd_vel.linear.y = 0
                     self.cmd_vel.linear.z = 0
                     self.cmd_vel.angular.x = 0
                     self.cmd_vel.angular.y = 0
