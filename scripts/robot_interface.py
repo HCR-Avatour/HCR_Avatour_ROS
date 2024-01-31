@@ -45,7 +45,7 @@ class robot_interface:
         ######################
         topic_name = "/VR/joy"
         self.sub_VR_joy = rospy.Subscriber(topic_name, Joy, self.call_back_VR_joy, queue_size=1)
-        rospy.loginfo("Robot joystick mode selected ")
+        rospy.loginfo("VR joystick subscriber created")
         
         ### publish back to the wheelchair
         ## ROS publisher to send joystick data
@@ -75,6 +75,8 @@ class robot_interface:
                 DO STUFF HERE to process
                 '''
                 if move:
+                    self.cmd_vel.twist.header.stamp = rospy.Time.now()
+                    self.cmd_vel.twist.header.frame_id = "base_link"
                     self.cmd_vel.linear.x = 0.1
                     self.cmd_vel.angular.z = 0.5
                     self.robot_pub.publish(self.cmd_vel)
