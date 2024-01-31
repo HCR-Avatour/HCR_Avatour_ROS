@@ -184,6 +184,7 @@ class PublishThread(threading.Thread):
 
 
 def getKey(settings, timeout):
+    key = 'k'
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
