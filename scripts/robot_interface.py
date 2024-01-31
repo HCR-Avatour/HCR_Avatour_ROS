@@ -82,6 +82,7 @@ class robot_interface:
                     self.cmd_vel.angular.y = 0
                     self.cmd_vel.angular.z = 0.5
                     self.robot_pub.publish(self.cmd_vel)
+                    rospy.loginfo("Publishing velocity command")
                     move = False
             except KeyboardInterrupt:
                 self.shutdown()
