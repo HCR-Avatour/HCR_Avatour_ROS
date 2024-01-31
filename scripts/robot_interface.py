@@ -102,18 +102,22 @@ class robot_interface:
                 '''
                 DO STUFF HERE to process
                 '''
-                if move:
-                    linear, value = self.getKey()
-                    if linear:
-                        self.cmd_vel.linear.x = value
-                        self.cmd_vel.angular.z = 0
-                    else:
-                        self.cmd_vel.linear.x = 0
-                        self.cmd_vel.angular.z = value
-                   
+                # if move:
+                #     linear, value = self.getKey()
+                #     if linear:
+                #         self.cmd_vel.linear.x = value
+                #         self.cmd_vel.angular.z = 0
+                #     else:
+                #         self.cmd_vel.linear.x = 0
+                #         self.cmd_vel.angular.z = value
+                self.cmd_vel.linear.x = 0.5
+                self.cmd_vel.angular.z = 0.5    
                     
-                    self.robot_pub.publish(self.cmd_vel)
-                    rospy.loginfo("Publishing velocity command")
+                self.robot_pub.publish(self.cmd_vel)
+                rospy.loginfo("Publishing velocity command")
+                rospy.loginfo(self.cmd_vel)
+                    
+                    
                     
                     
             except KeyboardInterrupt:
