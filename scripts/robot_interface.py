@@ -81,7 +81,7 @@ class robot_interface:
     #########################
     ##### Methods #######
     ######################### 
-    def getKey():
+    def getKey(self):
         linear = False
         for event in pygame.event.get():
             
@@ -92,7 +92,7 @@ class robot_interface:
                     linear == False
             
                 return (linear, event.value)
-            return None, None
+            return (False, 0)
 
 
     def run(self):
@@ -104,14 +104,12 @@ class robot_interface:
                 '''
                 if move:
                     linear, value = self.getKey()
-                    
-                    if linear is not None and value is not None:
-                        if linear:
-                            self.cmd_vel.linear.x = value
-                            self.cmd_vel.angular.z = 0
-                        else:
-                            self.cmd_vel.linear.x = 0
-                            self.cmd_vel.angular.z = value
+                    if linear:
+                        self.cmd_vel.linear.x = value
+                        self.cmd_vel.angular.z = 0
+                    else:
+                        self.cmd_vel.linear.x = 0
+                        self.cmd_vel.angular.z = value
                    
                     
                     self.robot_pub.publish(self.cmd_vel)
