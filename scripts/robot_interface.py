@@ -139,6 +139,8 @@ class robot_interface:
         self.cmd_vel.linear.x = joy_msg.axes[0]
         self.cmd_vel.angular.z = joy_msg.axes[1]
         
+        ## NOTE: need to ensure linear.x and angular.z are set to 0 (from server function) when the joystick is not being used
+        
         
         
 
