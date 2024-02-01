@@ -75,6 +75,8 @@ class robot_interface:
         self.cmd_vel.angular.y = 0
         self.cmd_vel.angular.z = 0
         
+        self.move = True
+        
 
        
     
@@ -87,29 +89,27 @@ class robot_interface:
             
             if event.type == pygame.JOYAXISMOTION:
                 if event.axis == 1:
-                    linear == True
+                    linear = True
                 else:
-                    linear == False
+                    linear = False
             
                 return (linear, event.value)
         return (False, 0)
 
 
     def run(self):
-        move = True
         while not rospy.is_shutdown():
             try:
                 '''
                 DO STUFF HERE to process
                 '''
-                if move:
-                    linear, value = self.getKey()
-                    if linear:
-                        self.cmd_vel.linear.x = value
-                        self.cmd_vel.angular.z = 0
-                    else:
-                        self.cmd_vel.linear.x = 0
-                        self.cmd_vel.angular.z = value
+                linear, value = self.getKey()
+                if linear:
+                    self.cmd_vel.linear.x = value
+                    self.cmd_vel.angular.z = 0
+                else:
+                    self.cmd_vel.linear.x = 0
+                    self.cmd_vel.angular.z = value
 
                 self.robot_pub.publish(self.cmd_vel)
                 rospy.loginfo("Publishing velocity command")
@@ -125,7 +125,7 @@ class robot_interface:
                 break
             
     def shutdown(self):
-        rospy.loginfo("Closing Socket")
+        rospy.loginfo("Closing robot_interface node")
         rospy.signal_shutdown()
     
     
@@ -136,7 +136,10 @@ class robot_interface:
     ## should be called when we receive a joystick message
     def call_back_VR_joy(self, joy_msg: Joy):
         ## get the joystick command
-        joy_msg = joy_msg.axes
+        self.cmd_vel.linear.x = joy_msg.axes[0]
+        self.cmd_vel.angular.z = joy_msg.axes[1]
+        
+        
         
 
 if __name__ == "__main__":
