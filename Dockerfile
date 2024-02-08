@@ -39,5 +39,4 @@ RUN source /opt/ros/noetic/setup.bash && \
 RUN source /opt/ros/noetic/setup.bash && catkin init && catkin build
 
 #CMD /bin/bash
-CMD source devel/setup.bash && rosrun rosaria RosAria _port:=${P3AT_USB_PORT} \
-    && "python3 "
+CMD source devel/setup.bash && rosrun rosaria RosAria _port:=${P3AT_USB_PORT}

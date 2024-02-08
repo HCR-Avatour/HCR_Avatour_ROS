@@ -34,22 +34,6 @@ from tf.transformations import quaternion_from_euler
 from typing import Tuple
 import threading
 from typing import List 
-import pygame
-
-
-pygame.init()
-
-# Initialize the joystick module
-pygame.joystick.init()
-
-# Check for joystick availability
-if pygame.joystick.get_count() == 0:
-    print("No joystick detected.")
-    quit()
-
-# Initialize the first joystick
-joystick = pygame.joystick.Joystick(0)
-joystick.init()
 
 class robot_interface:
 
@@ -75,7 +59,7 @@ class robot_interface:
         self.cmd_vel.angular.y = 0
         self.cmd_vel.angular.z = 0
         
-        self.move = True
+        self.move = False
         
 
        
@@ -83,19 +67,6 @@ class robot_interface:
     #########################
     ##### Methods #######
     ######################### 
-    def getKey(self):
-        linear = False
-        for event in pygame.event.get():
-            
-            if event.type == pygame.JOYAXISMOTION:
-                if event.axis == 1:
-                    linear = True
-                else:
-                    linear = False
-            
-                return (linear, event.value)
-        return (False, 0)
-
 
     def run(self):
         while not rospy.is_shutdown():
@@ -103,17 +74,12 @@ class robot_interface:
                 '''
                 DO STUFF HERE to process
                 '''
-                linear, value = self.getKey()
-                if linear:
-                    self.cmd_vel.linear.x = value
-                    self.cmd_vel.angular.z = 0
-                else:
-                    self.cmd_vel.linear.x = 0
-                    self.cmd_vel.angular.z = value
-
-                self.robot_pub.publish(self.cmd_vel)
-                rospy.loginfo("Publishing velocity command")
-                rospy.loginfo(self.cmd_vel)
+                # print("Running")
+                if self.move:
+                    # print("Publishing to robot")
+                    self.robot_pub.publish(self.cmd_vel)
+                # rospy.loginfo("Publishing velocity command")
+                rospy.loginfo("X: " + str(self.cmd_vel.linear.x) + " Z: " + str(self.cmd_vel.angular.z))
                     
                     
                     
@@ -136,8 +102,9 @@ class robot_interface:
     ## should be called when we receive a joystick message
     def call_back_VR_joy(self, joy_msg: Joy):
         ## get the joystick command
-        self.cmd_vel.linear.x = joy_msg.axes[0]
-        self.cmd_vel.angular.z = joy_msg.axes[1]
+        self.cmd_vel.linear.x = float(joy_msg.axes[0])
+        self.cmd_vel.angular.z = float(joy_msg.axes[-1])
+        self.move = True if self.cmd_vel.linear.x != 0 or self.cmd_vel.linear.z !=0 else False
         
         ## NOTE: need to ensure linear.x and angular.z are set to 0 (from server function) when the joystick is not being used
         
