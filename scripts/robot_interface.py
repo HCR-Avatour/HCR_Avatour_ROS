@@ -35,6 +35,26 @@ from typing import Tuple
 import threading
 from typing import List 
 
+
+class Joy:
+    def __init__(self):
+        self.left_x = 0.0
+        self.left_y = 0.0
+        self.right_x = 0.0
+        self.right_y = 0.0
+        self.modes = ["standing", "walking"]
+        self.mode = self.modes[0] ## init the enum
+        self.start()
+                
+    def close(self):
+        self.stop = True
+        rospy.loginfo("Joystick closed")
+        
+    def start(self):
+        self.stop = False
+        rospy.loginfo("Joystick started")
+
+
 class robot_interface:
 
     def __init__(self,):
@@ -42,9 +62,14 @@ class robot_interface:
         ######################
         ##### Substribers #####
         ######################
-        topic_name = "/VR/joy"
-        self.sub_VR_joy = rospy.Subscriber(topic_name, Joy, self.call_back_VR_joy, queue_size=1)
-        rospy.loginfo("VR joystick subscriber created")
+        self.sub_VR_joy_left = rospy.Subscriber("/VR/joy_left", Joy, self.call_back_VR_joy_left, queue_size=1)
+        self.sub_VR_joy_right = rospy.Subscriber("/VR/joy_right", Joy, self.call_back_VR_joy_right, queue_size=1)
+        self.sub_VR_joy_mode = rospy.Subscriber("/VR/mode", String, self.call_back_VR_mode, queue_size=1)
+        rospy.loginfo("VR joystick subscriber created")        
+        
+        self.joystick = Joy()
+        rospy.init_node('joystick_teleop')
+        
         
         ### publish back to the wheelchair
         ## ROS publisher to send joystick data
@@ -74,15 +99,12 @@ class robot_interface:
                 '''
                 DO STUFF HERE to process
                 '''
-                # print("Running")
+                self.move = self.joystick.mode == "walking"
                 if self.move:
                     # print("Publishing to robot")
                     self.robot_pub.publish(self.cmd_vel)
                 # rospy.loginfo("Publishing velocity command")
                 rospy.loginfo("X: " + str(self.cmd_vel.linear.x) + " Z: " + str(self.cmd_vel.angular.z))
-                    
-                    
-                    
                     
             except KeyboardInterrupt:
                 self.shutdown()
@@ -95,19 +117,37 @@ class robot_interface:
         rospy.signal_shutdown()
     
     
-    ## ROS PUBLISHERS --> Define ROS publishers here
-
-    ## ROS CALLBACKS
 
     ## should be called when we receive a joystick message
-    def call_back_VR_joy(self, joy_msg: Joy):
-        ## get the joystick command
-        self.cmd_vel.linear.x = float(joy_msg.axes[0])
-        self.cmd_vel.angular.z = float(joy_msg.axes[-1])
-        self.move = True if self.cmd_vel.linear.x != 0 or self.cmd_vel.linear.z !=0 else False
+    # def call_back_VR_joy(self, joy_msg: Joy):
+    #     ## get the joystick command
+    #     self.cmd_vel.linear.x = float(joy_msg.axes[0])
+    #     self.cmd_vel.angular.z = float(joy_msg.axes[-1])
+    #     self.move = True if self.cmd_vel.linear.x != 0 or self.cmd_vel.linear.z !=0 else False
         
-        ## NOTE: need to ensure linear.x and angular.z are set to 0 (from server function) when the joystick is not being used
+    ## NOTE: need to ensure linear.x and angular.z are set to 0 (from server function) when the joystick is not being used
+    ## should be called when we receive a joystick message
+    def call_back_VR_joy_left(self, joy_msg:  Joy):
+        self.joystick.left_x = float(joy_msg.axes[0])
+        self.joystick.left_y = float(joy_msg.axes[1])
+        rospy.loginfo("Left Joystick X: " + str(self.joystick.left_x) + " Y: " + str(self.joystick.left_y))
         
+    def call_back_VR_joy_right(self, joy_msg:  Joy):
+        self.joystick.right_x = float(joy_msg.axes[0])
+        self.joystick.right_y = float(joy_msg.axes[1])
+        rospy.loginfo("Right Joystick X: " + str(self.joystick.right_x) + " Y: " + str(self.joystick.right_y))
+   
+    def call_back_VR_mode(self, mode: String):
+        if mode.data in self.joystick.modes:
+            self.joystick.mode = mode
+            rospy.loginfo("Mode " + self.joystick.mode)
+        else: 
+            rospy.loginfo("Invalid mode")
+                    
+    def call_back_stop(self, stop: String):
+        if stop.data == "stop":
+            self.joystick.close()
+            rospy.loginfo("Joystick closed")
         
         
 
