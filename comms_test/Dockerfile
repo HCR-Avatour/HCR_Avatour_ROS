@@ -19,5 +19,4 @@ RUN source /opt/ros/noetic/setup.bash && catkin init && catkin build
 
 
 # Add the following line to run motion_server.py
-CMD python3 motion_server.py
-
+RUN roscore

@@ -36,7 +36,7 @@ import threading
 from typing import List 
 
 
-class Joy:
+class JoyStick:
     def __init__(self):
         self.left_x = 0.0
         self.left_y = 0.0
@@ -64,11 +64,10 @@ class robot_interface:
         ######################
         self.sub_VR_joy_left = rospy.Subscriber("/VR/joy_left", Joy, self.call_back_VR_joy_left, queue_size=1)
         self.sub_VR_joy_right = rospy.Subscriber("/VR/joy_right", Joy, self.call_back_VR_joy_right, queue_size=1)
-        self.sub_VR_joy_mode = rospy.Subscriber("/VR/mode", String, self.call_back_VR_mode, queue_size=1)
+        self.sub_VR_joy_mode = rospy.Subscriber("/VR/joy_mode", String, self.call_back_VR_mode, queue_size=1)
         rospy.loginfo("VR joystick subscriber created")        
         
-        self.joystick = Joy()
-        rospy.init_node('joystick_teleop')
+        self.joystick = JoyStick()
         
         
         ### publish back to the wheelchair
@@ -99,12 +98,10 @@ class robot_interface:
                 '''
                 DO STUFF HERE to process
                 '''
-                self.move = self.joystick.mode == "walking"
-                if self.move:
-                    # print("Publishing to robot")
-                    self.robot_pub.publish(self.cmd_vel)
-                # rospy.loginfo("Publishing velocity command")
-                rospy.loginfo("X: " + str(self.cmd_vel.linear.x) + " Z: " + str(self.cmd_vel.angular.z))
+                self.move = self.joystick.mode == "standing"
+                rospy.loginfo("Mode: " + str(self.joystick.mode))
+                rospy.loginfo("Moving: " + str(self.joystick.left_x) + " " + str(self.joystick.left_y) + " " + str(self.joystick.right_x) + " " + str(self.joystick.right_y))
+                    
                     
             except KeyboardInterrupt:
                 self.shutdown()
@@ -140,7 +137,7 @@ class robot_interface:
     def call_back_VR_mode(self, mode: String):
         if mode.data in self.joystick.modes:
             self.joystick.mode = mode
-            rospy.loginfo("Mode " + self.joystick.mode)
+            rospy.loginfo("Mode " + str(self.joystick.mode))
         else: 
             rospy.loginfo("Invalid mode")
                     
