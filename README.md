@@ -1,6 +1,9 @@
-# FORKED FROM: Imperial College - EEE - Human Centered Robotics 2024 -> 
+# FORKED FROM: Imperial College - EEE - Human Centered Robotics 2024
 
 This repo is used to test receiving motion commands from VR/tablet via ROS to a p3at robot. This repository acted as a replacement from [SPOT](https://github.com/HCR-Avatour/SPOT) repo, when SPOT was unavailable. 
+
+## Authors
+PRL, Rohan Gandhi, Aleera Ewan
 
 # Prerequisites
 
