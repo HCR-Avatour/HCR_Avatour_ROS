@@ -1,7 +1,6 @@
-# Imperial College - EEE - Human Centered Robotics 2024
+# FORKED FROM: Imperial College - EEE - Human Centered Robotics 2024 -> 
 
-This repository is intended for Imperial College students taking the Human Centered Robotics class with Pr. Demiris.
-You will find here everything you need to start working with the robots.
+This repo is used to test receiving motion commands from VR/tablet via ROS to a p3at robot. This repository acted as a replacement from [SPOT](https://github.com/HCR-Avatour/SPOT) repo, when SPOT was unavailable. 
 
 # Prerequisites
 
